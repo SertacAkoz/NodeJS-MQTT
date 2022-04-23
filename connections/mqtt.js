@@ -1,9 +1,10 @@
 const mqtt = require('mqtt')
 
-const host = 'host'
-const port = 'port'
+// const host = 'host'
+// const port = 'port'
+const host = 'broker.emqx.io'
+const port = '1883'
 const clientId = `mqtt_${Math.random().toString(16).slice(3)}`
-
 
 const connectUrl = `mqtt://${host}:${port}`
 const client = mqtt.connect(connectUrl, {
@@ -15,7 +16,7 @@ const client = mqtt.connect(connectUrl, {
     reconnectPeriod: 1000,
 })
 
-const topic = '/nodejs/mqtt'
+const topic = '/mqtt'
 
 var jsonObject = {
     "Welcome": "Hi!"
@@ -36,8 +37,14 @@ client.on('connect', () => {
         })
     })
 })
+client.on('disconnect', () => {
+    onlineUse--
+    console.log(`Online User --> ${onlineUser}`)
+})
 client.on('message', (topic, payload) => {
     console.log('Received Message:', topic, "\n" + payload)
 })
 
 module.exports = client
+
+
